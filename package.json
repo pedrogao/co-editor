@@ -1,0 +1,13 @@
+{
+  "name": "co-editor",
+  "version": "0.0.1",
+  "description": "协同 markdown 编辑器",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "editor"
+  ],
+  "author": "1312342604@qq.com",
+  "license": "MIT"
+}
