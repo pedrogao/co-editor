@@ -1,7 +1,11 @@
 import axios from "axios";
+import { defaultAPIURL } from "../config";
 
+//
+// http api
+//
 const instance = axios.create({
-  baseURL: "http://localhost:3000/api",
+  baseURL: defaultAPIURL,
   timeout: 3000,
   headers: {
     "Access-Control-Allow-Origin": "*",

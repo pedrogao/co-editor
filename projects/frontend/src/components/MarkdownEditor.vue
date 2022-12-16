@@ -9,7 +9,8 @@ import { onMounted } from "vue";
 import Vditor from "vditor";
 import * as Automerge from "@automerge/automerge";
 import * as localforage from "localforage";
-import { post, put, get } from "../api";
+import { createDoc, DocumentPatcher, updateDoc } from "../api/document";
+import { defaultWSURL } from "../config";
 
 export interface Document {
   content: string;
@@ -18,6 +19,7 @@ export interface Document {
 let vditor: Vditor | null = null;
 let doc: Automerge.Doc<Document> | null = null;
 let docId: string;
+let patcher: DocumentPatcher;
 
 onMounted(async () => {
   await init();
@@ -26,9 +28,11 @@ onMounted(async () => {
 const init = async () => {
   docId = await createDoc();
   doc = Automerge.init();
+  patcher = new DocumentPatcher(defaultWSURL);
+  patcher.start();
 
   vditor = new Vditor("vditor", {
-    height: 460,
+    height: 660,
     width: 1200,
     toolbarConfig: {
       pin: true,
@@ -53,32 +57,6 @@ const init = async () => {
       updateDoc(docId, binary.toString());
     },
   });
-};
-
-const createDoc = async () => {
-  const resp = await post("/document");
-  const id: string = resp.data.data;
-  console.log("create document: ", id);
-  return id;
-};
-
-const updateDoc = async (id: string, content: string) => {
-  try {
-    await put(`/document/${id}`, {
-      content,
-    });
-  } catch (error) {
-    console.log("update doc err: ", error);
-  }
-};
-
-const queryDoc = async (id: string) => {
-  try {
-    const resp = await get(`/document/${id}`);
-    return resp.data.content as string;
-  } catch (error) {
-    console.log("update doc err: ", error);
-  }
 };
 </script>
 

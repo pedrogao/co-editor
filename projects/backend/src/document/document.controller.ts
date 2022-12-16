@@ -1,7 +1,8 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { DocumentService } from './document.service';
-import { UpdateDocDto, Doc } from './dto';
-import { APIResponse } from '../entity';
+import { UpdateDocDto } from './dto';
+import { APIResponse } from 'common';
+import { Document } from '../store';
 
 @Controller('api/document')
 export class DocumentController {
@@ -18,9 +19,9 @@ export class DocumentController {
   }
 
   @Get(':id')
-  query(@Param('id') id: string): APIResponse<Doc> {
+  query(@Param('id') id: string): APIResponse<Document> {
     const doc = this.docService.query(id);
-    const resp: APIResponse<Doc> = {
+    const resp: APIResponse<Document> = {
       status: 0,
     };
     if (!doc) {

@@ -7,8 +7,10 @@
       height="125"
     /> -->
 
-  <!-- <HelloWorld msg="You did it!" /> -->
-  <MarkdownEditor />
+  <div class="container mx-auto bg-gray-200 rounded-xl shadow border p-8 m-10">
+    <p class="text-2xl text-gray-700 font-bold mb-5">Type what you want!</p>
+    <MarkdownEditor />
+  </div>
 
   <!-- <nav> -->
   <!-- <RouterLink to="/">Home</RouterLink> -->
@@ -24,27 +26,4 @@
 import MarkdownEditor from "./components/MarkdownEditor.vue";
 </script>
 
-<style scoped>
-.logo {
-  display: block;
-  margin: 0 auto 2rem;
-}
-
-nav a.router-link-exact-active {
-  color: var(--color-text);
-}
-
-nav a.router-link-exact-active:hover {
-  background-color: transparent;
-}
-
-nav a {
-  display: inline-block;
-  padding: 0 1rem;
-  border-left: 1px solid var(--color-border);
-}
-
-nav a:first-of-type {
-  border: 0;
-}
-</style>
+<style scoped></style>

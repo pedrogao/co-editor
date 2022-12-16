@@ -1,6 +1,7 @@
 # co-editor
 
 > 协同 markdown 编辑器
+> 正在疯狂撸代码中，还未开发完成...
 
 ## projects
 

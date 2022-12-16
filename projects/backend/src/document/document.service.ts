@@ -1,22 +1,19 @@
 import { Injectable } from '@nestjs/common';
-import { nanoid } from 'nanoid';
-import { Doc } from './dto';
+import { defaultDocumentStore, Document } from '../store';
 
 @Injectable()
 export class DocumentService {
-  private docMap = new Map<string, Doc>();
-
   create(): string {
-    const id = nanoid(10);
-    this.docMap.set(id, { id, content: '' });
-    return id;
+    return defaultDocumentStore.create().id;
   }
 
-  query(id: string): Doc | undefined {
-    return this.docMap.get(id);
+  query(id: string): Document | undefined {
+    return defaultDocumentStore.query(id);
   }
 
   update(id: string, content: string) {
-    this.docMap.set(id, { id, content });
+    return defaultDocumentStore.update(id, {
+      content,
+    });
   }
 }
