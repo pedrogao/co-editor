@@ -1,5 +1,5 @@
 export const defaultAPIURL = "http://localhost:3000/api";
-export const defaultWSURL = "http://localhost:3001";
+export const defaultWSURL = "ws://localhost:3001";
 
 export const PATCH_DOCUMENT_EVENT: string = "patch_document";
 export const FETCH_DOCUMENT_EVENT: string = "fetch_document";

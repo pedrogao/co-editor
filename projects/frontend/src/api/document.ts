@@ -28,25 +28,27 @@ export const queryDoc = async (id: string) => {
   }
 };
 
-type callback = (
+type clientCallback = (
   message: common.DocumentMessage<common.InnerDocumentMessage>
 ) => void;
+type serverCallback = (message: common.InnerDocumentMessage) => void;
 
 //
 // websocket api
 //
 interface ServerToClientEvents {
-  patch_document: callback;
-  fetch_document: callback;
+  patch_document: serverCallback;
+  fetch_document: serverCallback;
 }
 
 interface ClientToServerEvents {
-  patch_document: callback;
-  fetch_document: callback;
+  patch_document: clientCallback;
+  fetch_document: clientCallback;
 }
 
 export class DocumentPatcher {
   private socket: Socket<ServerToClientEvents, ClientToServerEvents>;
+
   constructor(url: string) {
     this.socket = io(url, {
       transports: ["websocket"],
@@ -54,33 +56,40 @@ export class DocumentPatcher {
       withCredentials: true,
       extraHeaders: {},
     });
-  }
-
-  start() {
     this.socket.on("connect", () => {
-      console.log("new connection");
+      console.log("new connection: ", this.socket.id);
     });
+    this.socket.on("disconnect", () => {
+      console.log("disconnect");
+    });
+
     this.socket.on("patch_document", (message) => {
-      if (message.data.error) {
-        console.error("patch document err: ", message.data.error);
+      console.log("patch_document message: ", message);
+      if (message.error) {
+        console.error("patch document err: ", message.error);
       } else {
-        console.log("patch document successful: ", message.data.id);
+        console.log("patch document successful: ", message.id);
       }
     });
     this.socket.on("fetch_document", (message) => {
-      if (message.data.error) {
-        console.error("fetch document err: ", message.data.error);
+      console.log("fetch_document message: ", message);
+      if (message.error) {
+        console.error("fetch document err: ", message.error);
       } else {
-        const { id, content } = message.data;
+        const { id, content } = message;
         console.log("fetch document successful: ", id);
         // TODO merge content
         console.log(content);
       }
     });
+  }
+
+  start() {
     this.socket.connect();
   }
 
   patchDocument(id: string, content: string) {
+    // console.log("patch", id, content);
     this.socket.emit("patch_document", {
       event: common.PATCH_DOCUMENT_EVENT,
       data: {

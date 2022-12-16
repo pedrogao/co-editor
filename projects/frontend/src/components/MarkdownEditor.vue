@@ -8,8 +8,8 @@
 import { onMounted } from "vue";
 import Vditor from "vditor";
 import * as Automerge from "@automerge/automerge";
-import * as localforage from "localforage";
-import { createDoc, DocumentPatcher, updateDoc } from "../api/document";
+// import * as localforage from "localforage";
+import { createDoc, DocumentPatcher } from "../api/document";
 import { defaultWSURL } from "../config";
 
 export interface Document {
@@ -51,10 +51,11 @@ const init = async () => {
       });
       doc = newDoc;
       let binary = Automerge.save(newDoc); // 存储
-      localforage.setItem(docId, binary).catch((err) => {
-        console.log("store local err: ", err);
-      });
-      updateDoc(docId, binary.toString());
+      // localforage.setItem(docId, binary).catch((err) => {
+      //   console.log("store local err: ", err);
+      // });
+      patcher.patchDocument(docId, binary.toString());
+      // updateDoc(docId, binary.toString());
     },
   });
 };

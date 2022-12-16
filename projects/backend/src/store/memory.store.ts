@@ -15,11 +15,8 @@ export class MemoryDocumentStore implements DocumentStore {
   }
 
   update(id: string, args: UpdateDocumentArgs): boolean {
-    let doc: Document;
-    if ((doc = this.docMap.get(id)) === undefined) {
-      return false;
-    }
-    this.docMap.set(id, { ...doc, ...args });
+    this.docMap.set(id, { id, content: args.content });
+    return true;
   }
 
   delete(id: string): boolean {
