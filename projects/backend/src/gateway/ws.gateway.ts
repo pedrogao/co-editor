@@ -15,7 +15,11 @@ import {
   InnerDocumentMessage,
 } from 'common';
 
-@WebSocketGateway(3001, { cors: true })
+@WebSocketGateway(3001, {
+  cors: {
+    origin: '*',
+  },
+})
 export class WsDocumentGateway {
   constructor(private readonly docService: DocumentService) {}
 

@@ -33,12 +33,6 @@ export default defineConfig({
         changeOrigin: true, // 开启跨域
         rewrite: (path) => path.replace(/\/api/, ""), // 路径重写
       },
-      "/socket.io": {
-        target: "http://localhost:3001",
-        changeOrigin: true, // 开启跨域
-        ws: true,
-        rewrite: (path) => path.replace(/\/socket.io/, ""), // 路径重写
-      },
     },
   },
 });

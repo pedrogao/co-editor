@@ -49,35 +49,35 @@ export class DocumentPatcher {
   private socket: Socket<ServerToClientEvents, ClientToServerEvents>;
   constructor(url: string) {
     this.socket = io(url, {
+      transports: ["websocket"],
+      autoConnect: false,
       withCredentials: true,
-      extraHeaders: {
-        "Access-Control-Allow-Origin": "*",
-        "Access-Control-Allow-Credentials": "true",
-      },
+      extraHeaders: {},
     });
   }
 
   start() {
     this.socket.on("connect", () => {
-      this.socket.on("patch_document", (message) => {
-        if (message.data.error) {
-          console.error("patch document err: ", message.data.error);
-        } else {
-          console.log("patch document successful: ", message.data.id);
-        }
-      });
-
-      this.socket.on("fetch_document", (message) => {
-        if (message.data.error) {
-          console.error("fetch document err: ", message.data.error);
-        } else {
-          const { id, content } = message.data;
-          console.log("fetch document successful: ", id);
-          // TODO merge content
-          console.log(content);
-        }
-      });
+      console.log("new connection");
     });
+    this.socket.on("patch_document", (message) => {
+      if (message.data.error) {
+        console.error("patch document err: ", message.data.error);
+      } else {
+        console.log("patch document successful: ", message.data.id);
+      }
+    });
+    this.socket.on("fetch_document", (message) => {
+      if (message.data.error) {
+        console.error("fetch document err: ", message.data.error);
+      } else {
+        const { id, content } = message.data;
+        console.log("fetch document successful: ", id);
+        // TODO merge content
+        console.log(content);
+      }
+    });
+    this.socket.connect();
   }
 
   patchDocument(id: string, content: string) {
