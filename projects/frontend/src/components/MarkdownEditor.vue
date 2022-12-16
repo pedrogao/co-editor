@@ -1,6 +1,21 @@
 <template>
-  <div class="container">
+  <div class="editor-container">
     <div id="vditor"></div>
+    <div class="status">
+      <div class="status-left">
+        <span
+          >字数：
+          <strong>2</strong>
+        </span>
+        <span
+          >行数：
+          <strong>3</strong>
+        </span>
+      </div>
+      <div class="status-right">
+        <span class="top">回到顶部</span>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -32,8 +47,7 @@ const init = async () => {
   patcher.start();
 
   vditor = new Vditor("vditor", {
-    height: 660,
-    width: 1200,
+    width: "100%",
     toolbarConfig: {
       pin: true,
     },
@@ -64,7 +78,41 @@ const init = async () => {
 <style>
 @import url(vditor/dist/index.css);
 
-.container {
-  /* text-align: center; */
+.editor-container {
+  width: 100%;
+  height: 100%;
+  padding: 0;
+  margin: 0;
+}
+
+#vditor {
+  height: calc(100vh - 93px) !important;
+}
+
+.status {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  font-size: 12px;
+  line-height: 24px;
+  border-top: 1px solid #e1e4e8;
+  user-select: none;
+}
+
+.status-left {
+  float: left;
+}
+
+.status-right {
+  float: right;
+}
+
+.top {
+  padding-right: 10px;
+}
+
+span {
+  padding-left: 16px;
 }
 </style>
