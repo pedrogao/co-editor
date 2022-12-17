@@ -1,6 +1,9 @@
 import {
   ConnectedSocket,
   MessageBody,
+  OnGatewayConnection,
+  OnGatewayDisconnect,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
@@ -22,14 +25,48 @@ import {
   cors: {
     origin: '*',
   },
-  // transports: ['websocket'],
+  transports: ['websocket'],
 })
-export class WsDocumentGateway {
+export class WsDocumentGateway
+  implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit
+{
+  private wsClients = [];
+
   constructor(private readonly docService: DocumentService) {}
+
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  afterInit(server: any) {
+    console.log('after init');
+  }
+
+  handleDisconnect(client: any) {
+    console.log('dis client: ', client.id);
+    for (let i = 0; i < this.wsClients.length; i++) {
+      if (this.wsClients[i].id === client.id) {
+        this.wsClients.splice(i, 1);
+        break;
+      }
+    }
+  }
+
+  handleConnection(client: any, ...args: any[]) {
+    console.log('new client: ', client.id);
+    this.wsClients.push(client);
+  }
+
+  private broadcast(event: string, message: any) {
+    const broadCastMessage = JSON.stringify(message);
+    for (const c of this.wsClients) {
+      console.log('client: ', c);
+      console.log('broadCastMessage: ', broadCastMessage);
+      c.send(event, broadCastMessage);
+    }
+  }
 
   @SubscribeMessage(PATCH_DOCUMENT_EVENT)
   patchDocument(
-    @MessageBody() message: DocumentMessage<InnerDocumentMessage>,
+    client: any,
+    message: DocumentMessage<InnerDocumentMessage>,
   ): DocumentMessage<InnerDocumentMessage> {
     // 提交文档更新
     const resp: DocumentMessage<InnerDocumentMessage> = {
@@ -57,6 +94,7 @@ export class WsDocumentGateway {
     }
     const remote = Automerge.load<Document>(unmarshal(content));
     const newDoc = Automerge.merge(local, remote);
+    logger.info('patch document: ', newDoc);
     const binary = Automerge.save(newDoc);
     const newContent = marshal(binary);
     const ok = this.docService.update(id, newContent);
@@ -64,8 +102,10 @@ export class WsDocumentGateway {
       resp.data.error = '更新文档失败';
       return resp;
     }
+
     resp.data.content = newContent;
-    logger.info('patch document: ', resp);
+    console.log('client: ', client.broadcast.emit);
+    client.broadcast.emit(FETCH_DOCUMENT_EVENT, resp.data);
     return resp;
   }
 

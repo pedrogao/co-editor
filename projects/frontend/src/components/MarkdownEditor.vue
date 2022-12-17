@@ -3,10 +3,12 @@
     <div id="vditor"></div>
     <div class="status">
       <div class="status-left">
-        <span>字数：
+        <span
+          >字数：
           <strong>2</strong>
         </span>
-        <span>行数：
+        <span
+          >行数：
           <strong>3</strong>
         </span>
       </div>
@@ -35,7 +37,6 @@ const props = defineProps<{
 }>();
 
 onMounted(async () => {
-  console.log("props: ", props);
   await init(props.id);
 });
 
@@ -61,6 +62,17 @@ const init = async (id: string | undefined) => {
     console.error(error);
   }
 
+  const fetchCallback = (message: string) => {
+    const remote = Automerge.load<Document>(unmarshal(message));
+    console.log("remote: ", remote);
+    if (vditor) {
+      const newDoc = Automerge.merge(Automerge.clone(doc!), remote);
+      console.log("fetch: ", newDoc.content);
+      vditor.setValue(newDoc.content);
+      doc = newDoc;
+    }
+  };
+
   const patcher: DocumentPatcher = new DocumentPatcher(
     defaultWSURL,
     patchCallback,
@@ -83,6 +95,7 @@ const init = async (id: string | undefined) => {
       }
     },
     input: (val) => {
+      // TODO fix patch后会触发
       const newDoc = Automerge.change(doc!, (doc) => {
         doc.content = val;
       });
@@ -97,14 +110,6 @@ const fresh = () => {
   init(props.id);
 };
 
-const fetchCallback = (message: string) => {
-  const doc = Automerge.load<Document>(unmarshal(message));
-  if (vditor && doc && doc.content) {
-    console.log("fetch: ", doc.content);
-    vditor.setValue(doc.content);
-  }
-};
-
 const patchCallback = (message: string) => {
   console.log(message);
 };
@@ -113,7 +118,7 @@ const loadFromLocal = async (docId: string) => {
   return localforage.getItem(docId);
 };
 
-const saveToocal = async (docId: string, content: string) => {
+const saveToLocal = async (docId: string, content: string) => {
   return localforage.setItem(docId, content);
 };
 

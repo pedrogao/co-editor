@@ -19,6 +19,7 @@ importers:
       '@types/express': ^4.17.13
       '@types/jest': 28.1.8
       '@types/node': ^16.0.0
+      '@types/socket.io': ^3.0.2
       '@types/supertest': ^2.0.11
       '@types/text-encoding': ^0.0.36
       '@types/ws': ^8.5.3
@@ -67,6 +68,7 @@ importers:
       '@types/express': 4.17.15
       '@types/jest': 28.1.8
       '@types/node': 16.18.9
+      '@types/socket.io': 3.0.2
       '@types/supertest': 2.0.12
       '@types/text-encoding': 0.0.36
       '@types/ws': 8.5.3
@@ -1806,6 +1808,17 @@ packages:
     dependencies:
       '@types/mime': 3.0.1
       '@types/node': 16.18.9
+    dev: true
+
+  /@types/socket.io/3.0.2:
+    resolution: {integrity: sha512-pu0sN9m5VjCxBZVK8hW37ZcMe8rjn4HHggBN5CbaRTvFwv5jOmuIRZEuddsBPa9Th0ts0SIo3Niukq+95cMBbQ==}
+    deprecated: This is a stub types definition. socket.io provides its own type definitions, so you do not need this installed.
+    dependencies:
+      socket.io: 4.5.4
+    transitivePeerDependencies:
+      - bufferutil
+      - supports-color
+      - utf-8-validate
     dev: true
 
   /@types/stack-utils/2.0.1:
@@ -6630,7 +6643,6 @@ packages:
       - bufferutil
       - supports-color
       - utf-8-validate
-    dev: false
 
   /source-map-js/1.0.2:
     resolution: {integrity: sha512-R0XvVJ9WusLiqTCEiGCmICCMplcCkIwwR11mOSD9CR5u+IXYdiseeEuXCVAjS54zqwkLcPNnmU4OeJ6tUrWhDw==}
