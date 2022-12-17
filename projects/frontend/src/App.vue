@@ -1,9 +1,9 @@
 <template>
   <div class="app">
     <header class="header">
-      <input class="title" placeholder="请填写标题" />
+      <input class="title" placeholder="请填写标题" v-model="inputId" />
       <div class="right-box">
-        <button class="menu">文件</button>
+        <button @click="openFile" class="menu">文件</button>
         <div class="more">↓</div>
         <ul class="more-list">
           <li class="item">写文章</li>
@@ -12,13 +12,22 @@
       </div>
     </header>
     <div class="editor">
-      <MarkdownEditor />
+      <MarkdownEditor ref="editor" :id="inputId" />
     </div>
   </div>
 </template>
 
 <script setup lang="ts">
+import { ref } from "vue";
 import MarkdownEditor from "./components/MarkdownEditor.vue";
+
+const inputId = ref("");
+const editor = ref<typeof MarkdownEditor | null>(null);
+
+const openFile = () => {
+  console.log(inputId.value);
+  editor.value?.fresh();
+};
 </script>
 
 <style scoped>

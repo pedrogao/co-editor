@@ -4,9 +4,9 @@ import * as common from "../config";
 
 export const createDoc = async () => {
   const resp = await post("/document");
-  const id: string = resp.data.data;
-  console.log("create document: ", id);
-  return id;
+  const doc: { id: string; content: string } = resp.data.data;
+  // console.log("create document: ", doc);
+  return doc;
 };
 
 export const updateDoc = async (id: string, content: string) => {
@@ -20,12 +20,9 @@ export const updateDoc = async (id: string, content: string) => {
 };
 
 export const queryDoc = async (id: string) => {
-  try {
-    const resp = await get(`/document/${id}`);
-    return resp.data.content as string;
-  } catch (error) {
-    console.log("update doc err: ", error);
-  }
+  const resp = await get(`/document/${id}`);
+  console.log("query: ", id, resp);
+  return resp.data.data as { id: string; content: string };
 };
 
 type clientCallback = (
@@ -49,7 +46,11 @@ interface ClientToServerEvents {
 export class DocumentPatcher {
   private socket: Socket<ServerToClientEvents, ClientToServerEvents>;
 
-  constructor(url: string) {
+  constructor(
+    url: string,
+    patchCallback: (message: string) => void,
+    fetchCallback: (message: string) => void
+  ) {
     this.socket = io(url, {
       transports: ["websocket"],
       autoConnect: false,
@@ -65,21 +66,20 @@ export class DocumentPatcher {
 
     this.socket.on("patch_document", (message) => {
       console.log("patch_document message: ", message);
-      if (message.error) {
+      const { error, content } = message;
+      if (error) {
         console.error("patch document err: ", message.error);
-      } else {
-        console.log("patch document successful: ", message.id);
+      } else if (content) {
+        patchCallback(content);
       }
     });
     this.socket.on("fetch_document", (message) => {
-      console.log("fetch_document message: ", message);
-      if (message.error) {
+      // console.log("fetch_document message: ", message);
+      const { error, content } = message;
+      if (error) {
         console.error("fetch document err: ", message.error);
-      } else {
-        const { id, content } = message;
-        console.log("fetch document successful: ", id);
-        // TODO merge content
-        console.log(content);
+      } else if (content) {
+        fetchCallback(content);
       }
     });
   }

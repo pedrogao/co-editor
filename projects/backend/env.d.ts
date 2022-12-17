@@ -1,1 +1,1 @@
-/// <reference types="../common/dist/index.d.ts" />
+/// <reference types="../common/dist/src/index.d.ts" />

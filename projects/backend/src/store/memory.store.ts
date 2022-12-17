@@ -4,9 +4,9 @@ import { nanoid } from 'nanoid';
 export class MemoryDocumentStore implements DocumentStore {
   private docMap = new Map<string, Document>();
 
-  create(): Document {
+  create(content: string): Document {
     const id = nanoid(10);
-    this.docMap.set(id, { id, content: '' });
+    this.docMap.set(id, { id, content });
     return this.docMap.get(id);
   }
 

@@ -3,8 +3,8 @@ import { defaultDocumentStore, Document } from '../store';
 
 @Injectable()
 export class DocumentService {
-  create(): string {
-    return defaultDocumentStore.create().id;
+  create(content: string): string {
+    return defaultDocumentStore.create(content).id;
   }
 
   query(id: string): Document | undefined {

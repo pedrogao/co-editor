@@ -4,7 +4,9 @@ import {
   SubscribeMessage,
   WebSocketGateway,
 } from '@nestjs/websockets';
+import * as Automerge from '@automerge/automerge';
 import { logger } from '../logger';
+import { Document } from '../store';
 import { DocumentService } from '../document/document.service';
 import * as WebSocket from 'ws';
 import {
@@ -12,6 +14,8 @@ import {
   FETCH_DOCUMENT_EVENT,
   DocumentMessage,
   InnerDocumentMessage,
+  marshal,
+  unmarshal,
 } from 'common';
 
 @WebSocketGateway(3001, {
@@ -27,10 +31,9 @@ export class WsDocumentGateway {
   patchDocument(
     @MessageBody() message: DocumentMessage<InnerDocumentMessage>,
   ): DocumentMessage<InnerDocumentMessage> {
-    logger.info('patch document: ', message.event);
     // 提交文档更新
     const resp: DocumentMessage<InnerDocumentMessage> = {
-      event: PATCH_DOCUMENT_EVENT,
+      event: FETCH_DOCUMENT_EVENT, // 触发 fetch
       data: {},
     };
     const { id, content } = message.data;
@@ -46,14 +49,23 @@ export class WsDocumentGateway {
     if (!content) {
       return resp; // 啥也不做
     }
-
-    const ok = this.docService.update(id, content);
+    let local;
+    if (doc.content && doc.content !== '') {
+      local = Automerge.load<Document>(unmarshal(doc.content));
+    } else {
+      local = Automerge.init<Document>();
+    }
+    const remote = Automerge.load<Document>(unmarshal(content));
+    const newDoc = Automerge.merge(local, remote);
+    const binary = Automerge.save(newDoc);
+    const newContent = marshal(binary);
+    const ok = this.docService.update(id, newContent);
     if (!ok) {
       resp.data.error = '更新文档失败';
       return resp;
     }
-    // TODO 引入 automerge
-    // 更新完成
+    resp.data.content = newContent;
+    logger.info('patch document: ', resp);
     return resp;
   }
 
@@ -66,7 +78,6 @@ export class WsDocumentGateway {
     logger.info('fetch document: ', message.event);
     // 获取最新文档
     // client.send(JSON.stringify({ event: 'tmp', data: '这里是个临时信息' }));
-    // TODO 返回最新的文档数据
     const resp: DocumentMessage<InnerDocumentMessage> = {
       event: FETCH_DOCUMENT_EVENT,
       data: {},

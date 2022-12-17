@@ -11,7 +11,7 @@ export interface UpdateDocumentArgs {
 }
 
 export interface DocumentStore {
-  create(): Document;
+  create(content: string): Document;
 
   query(id: string): Document | undefined;
 

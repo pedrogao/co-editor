@@ -3,7 +3,7 @@
 > 协同 markdown 编辑器
 > 正在疯狂撸代码中，还未开发完成...
 
-![shot](./shot.png)
+![shot](./docs/shot.png)
 
 ## projects
 

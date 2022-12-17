@@ -1,12 +1,14 @@
 {
   "compilerOptions": {
-    "target": "es2017",
-    "module": "commonjs",
+    "target": "ES6",
+    "module": "CommonJS",
     "sourceMap": true,
     "outDir": "./dist",
     "esModuleInterop": true,
+    "moduleResolution": "node",
     "forceConsistentCasingInFileNames": true,
     "strict": true,
+    "composite": true,
     "declaration": true
   }
 }
