@@ -7,7 +7,7 @@
 
 ## TODO
 
-- automerge 解析、深度实践
+- yjs 解析、深度实践
 - 协同编辑优化
 - 项目代码整理、重构
 - so many others...
@@ -29,6 +29,6 @@
 
 ## thanks
 
-- [automerge](https://automerge.org/)
+- [yjs](https://docs.yjs.dev/)
 - [juejin](https://juejin.cn/)
 - [SharedPen](http://objcer.com/2018/03/05/SharedPen/#more)

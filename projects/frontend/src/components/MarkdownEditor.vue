@@ -1,6 +1,6 @@
 <template>
   <div class="editor-container">
-    <div id="vditor"></div>
+    <div id="editor"></div>
     <div class="status">
       <div class="status-left">
         <span
@@ -21,12 +21,15 @@
 
 <script lang="ts" setup>
 import { onMounted } from "vue";
-import Vditor from "vditor";
-import * as Automerge from "@automerge/automerge";
 import * as localforage from "localforage";
-import { createDoc, DocumentPatcher, queryDoc } from "../api/document";
-import { defaultWSURL } from "../config";
-import { marshal, unmarshal } from "../marshaler";
+// import { createDoc, DocumentPatcher, queryDoc } from "../api/document";
+// import { defaultWSURL } from "../config";
+// import { marshal, unmarshal } from "../marshaler";
+import Quill from "quill";
+import QuillCursors from "quill-cursors";
+import { QuillBinding } from "y-quill";
+import { WebsocketProvider } from "y-websocket";
+import * as Y from "yjs";
 
 export interface Document {
   content: string;
@@ -36,74 +39,83 @@ const props = defineProps<{
   id?: string;
 }>();
 
+Quill.register("modules/cursors", QuillCursors);
+
 onMounted(async () => {
   await init(props.id);
 });
 
-let vditor: Vditor | null = null;
+let quill: Quill | null = null;
 
 const init = async (id: string | undefined) => {
-  let doc: Automerge.Doc<Document> | null = null,
-    docId: string | null = null,
-    content: string | null = null;
-  if (id && id !== "") {
-    const { id: id1, content: content1 } = await queryDoc(id);
-    docId = id1;
-    content = content1;
-  } else {
-    const { id: id1, content: content1 } = await createDoc();
-    docId = id1;
-    content = content1;
-  }
-  changeUrl(docId);
-  try {
-    doc = Automerge.load(unmarshal(content!));
-  } catch (error) {
-    console.error(error);
-  }
+  // let docId: string | null = null,
+  //   content: string | null = null;
+  // if (id && id !== "") {
+  //   const { id: id1, content: content1 } = await queryDoc(id);
+  //   docId = id1;
+  //   content = content1;
+  // } else {
+  //   const { id: id1, content: content1 } = await createDoc();
+  //   docId = id1;
+  //   content = content1;
+  // }
+  // changeUrl(docId);
 
-  const fetchCallback = (message: string) => {
-    const remote = Automerge.load<Document>(unmarshal(message));
-    console.log("remote: ", remote);
-    if (vditor) {
-      const newDoc = Automerge.merge(Automerge.clone(doc!), remote);
-      console.log("fetch: ", newDoc.content);
-      vditor.setValue(newDoc.content);
-      doc = newDoc;
-    }
-  };
+  // const patcher: DocumentPatcher = new DocumentPatcher(
+  //   defaultWSURL,
+  //   patchCallback,
+  //   fetchCallback
+  // );
+  // patcher.start();
 
-  const patcher: DocumentPatcher = new DocumentPatcher(
-    defaultWSURL,
-    patchCallback,
-    fetchCallback
-  );
-  patcher.start();
+  const toolbarOptions = [
+    ["bold", "italic", "underline", "strike"], // toggled buttons
+    ["blockquote", "code-block"],
 
-  vditor = new Vditor("vditor", {
-    width: "100%",
-    toolbarConfig: {
-      pin: true,
+    [{ header: 1 }, { header: 2 }], // custom button values
+    [{ list: "ordered" }, { list: "bullet" }],
+    [{ script: "sub" }, { script: "super" }], // superscript/subscript
+    [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
+    [{ direction: "rtl" }], // text direction
+
+    [{ size: ["small", "large", "huge"] }],
+    [{ header: [1, 2, 3, 4, 5, 6, false] }],
+
+    ["clean"], // remove formatting button
+  ];
+
+  quill = new Quill(document.getElementById("editor")!, {
+    modules: {
+      cursors: true,
+      toolbar: toolbarOptions,
+      history: {
+        // Local undo shouldn't undo changes
+        // from remote users
+        userOnly: true,
+      },
     },
-    cache: {
-      enable: false,
-    },
-    after: () => {
-      if (vditor && doc && doc.content) {
-        vditor.setValue(doc.content);
-        // vditor.focus();
-      }
-    },
-    input: (val) => {
-      // TODO fix patch后会触发
-      const newDoc = Automerge.change(doc!, (doc) => {
-        doc.content = val;
-      });
-      doc = newDoc;
-      let binary = Automerge.save(newDoc); // 存储
-      patcher.patchDocument(docId!, marshal(binary));
-    },
+    placeholder: "Type what you want...",
+    theme: "snow",
   });
+  quill.setText(""); // TODO
+
+  const ydoc = new Y.Doc();
+  const ytext = ydoc.getText("quill");
+  const wsProvider = new WebsocketProvider(
+    "ws://localhost:1234",
+    "test-room",
+    ydoc
+  );
+  wsProvider.on("status", (event: any) => {
+    console.log(event.status);
+  });
+  const awareness = wsProvider.awareness;
+  // awareness.setLocalStateField("user", {
+  //   name: "pedro",
+  //   color: "#ffb61e",
+  // });
+  const binding = new QuillBinding(ytext, quill, awareness);
+  console.log(binding);
 };
 
 const fresh = () => {
@@ -113,6 +125,8 @@ const fresh = () => {
 const patchCallback = (message: string) => {
   console.log(message);
 };
+
+const fetchCallback = (message: string) => {};
 
 const loadFromLocal = async (docId: string) => {
   return localforage.getItem(docId);
@@ -144,8 +158,8 @@ defineExpose({
   margin: 0;
 }
 
-#vditor {
-  height: calc(100vh - 93px) !important;
+#editor {
+  height: calc(100vh - 100px) !important;
 }
 
 .status {
