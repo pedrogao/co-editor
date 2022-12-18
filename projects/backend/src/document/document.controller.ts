@@ -1,9 +1,8 @@
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common';
 import { DocumentService } from './document.service';
 import { UpdateDocDto, CreateDocDto } from './dto';
-import { APIResponse, marshal } from 'common';
+import { APIResponse } from 'common';
 import { Document } from '../store';
-import * as Automerge from '@automerge/automerge';
 
 @Controller('api/document')
 export class DocumentController {
@@ -11,9 +10,7 @@ export class DocumentController {
 
   @Post()
   create(): APIResponse<CreateDocDto> {
-    const doc: Document = Automerge.init();
-    const binary = Automerge.save(doc);
-    const content = marshal(binary);
+    const content = '';
     const id = this.docService.create(content);
     const resp: APIResponse<CreateDocDto> = {
       status: 0,

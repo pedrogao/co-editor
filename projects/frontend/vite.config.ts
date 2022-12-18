@@ -40,6 +40,9 @@ export default defineConfig({
   // 本地运行配置，及反向代理配置
   server: {
     port: 4000,
+    hmr: {
+      overlay: false,
+    },
     proxy: {
       "/api": {
         target: "http://localhost:3000",

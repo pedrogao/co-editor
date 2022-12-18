@@ -11,7 +11,7 @@
     "start": "nest start",
     "start:dev": "nest start --watch",
     "start:debug": "nest start --debug --watch",
-    "start:prod": "node dist/main",
+    "start:prod": "node --trace-warnings dist/main",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
@@ -20,11 +20,11 @@
     "test:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
-    "@automerge/automerge": "2.0.1-alpha.2",
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-socket.io": "^9.2.1",
+    "@nestjs/platform-ws": "^9.2.1",
     "@nestjs/websockets": "^9.2.1",
     "common": "workspace:^0.0.1",
     "consola": "^2.15.3",
@@ -33,7 +33,9 @@
     "rimraf": "^3.0.2",
     "rxjs": "^7.2.0",
     "text-encoding": "^0.7.0",
-    "ws": "^8.11.0"
+    "ws": "^8.11.0",
+    "y-websocket": "^1.4.5",
+    "yjs": "^13.5.43"
   },
   "devDependencies": {
     "@nestjs/cli": "^9.0.0",

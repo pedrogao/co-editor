@@ -1,11 +1,11 @@
 import { Document, DocumentStore, UpdateDocumentArgs } from './document.store';
-import { nanoid } from 'nanoid';
+import { generate } from '../id';
 
 export class MemoryDocumentStore implements DocumentStore {
   private docMap = new Map<string, Document>();
 
   create(content: string): Document {
-    const id = nanoid(10);
+    const id = generate();
     this.docMap.set(id, { id, content });
     return this.docMap.get(id);
   }

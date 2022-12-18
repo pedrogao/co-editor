@@ -1,6 +1,6 @@
 <template>
   <div class="editor-container">
-    <div id="editor"></div>
+    <div id="qeditor"></div>
     <div class="status">
       <div class="status-left">
         <span
@@ -22,14 +22,14 @@
 <script lang="ts" setup>
 import { onMounted } from "vue";
 import * as localforage from "localforage";
-// import { createDoc, DocumentPatcher, queryDoc } from "../api/document";
-// import { defaultWSURL } from "../config";
-// import { marshal, unmarshal } from "../marshaler";
 import Quill from "quill";
 import QuillCursors from "quill-cursors";
 import { QuillBinding } from "y-quill";
 import { WebsocketProvider } from "y-websocket";
 import * as Y from "yjs";
+
+import { createDoc, queryDoc } from "../api/document";
+import { defaultWSURL } from "../config";
 
 export interface Document {
   content: string;
@@ -47,65 +47,48 @@ onMounted(async () => {
 
 let quill: Quill | null = null;
 
+const toolbarOptions = [
+  ["bold", "italic", "underline", "strike"],
+  ["blockquote", "code-block"],
+  [{ header: 1 }, { header: 2 }],
+  [{ list: "ordered" }, { list: "bullet" }],
+  [{ script: "sub" }, { script: "super" }],
+  [{ indent: "-1" }, { indent: "+1" }],
+  [{ direction: "rtl" }],
+  [{ size: ["small", "large", "huge"] }],
+  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+  ["clean"],
+];
+
 const init = async (id: string | undefined) => {
-  // let docId: string | null = null,
-  //   content: string | null = null;
-  // if (id && id !== "") {
-  //   const { id: id1, content: content1 } = await queryDoc(id);
-  //   docId = id1;
-  //   content = content1;
-  // } else {
-  //   const { id: id1, content: content1 } = await createDoc();
-  //   docId = id1;
-  //   content = content1;
-  // }
-  // changeUrl(docId);
-
-  // const patcher: DocumentPatcher = new DocumentPatcher(
-  //   defaultWSURL,
-  //   patchCallback,
-  //   fetchCallback
-  // );
-  // patcher.start();
-
-  const toolbarOptions = [
-    ["bold", "italic", "underline", "strike"], // toggled buttons
-    ["blockquote", "code-block"],
-
-    [{ header: 1 }, { header: 2 }], // custom button values
-    [{ list: "ordered" }, { list: "bullet" }],
-    [{ script: "sub" }, { script: "super" }], // superscript/subscript
-    [{ indent: "-1" }, { indent: "+1" }], // outdent/indent
-    [{ direction: "rtl" }], // text direction
-
-    [{ size: ["small", "large", "huge"] }],
-    [{ header: [1, 2, 3, 4, 5, 6, false] }],
-
-    ["clean"], // remove formatting button
-  ];
-
-  quill = new Quill(document.getElementById("editor")!, {
-    modules: {
-      cursors: true,
-      toolbar: toolbarOptions,
-      history: {
-        // Local undo shouldn't undo changes
-        // from remote users
-        userOnly: true,
+  let fn = null;
+  if (id && id !== "") {
+    fn = queryDoc;
+  } else {
+    fn = createDoc;
+  }
+  const { id: docId, content } = await fn(id!);
+  changeUrl(docId);
+  if (!quill) {
+    quill = new Quill(document.getElementById("qeditor")!, {
+      modules: {
+        cursors: true,
+        toolbar: toolbarOptions,
+        history: {
+          // Local undo shouldn't undo changes
+          // from remote users
+          userOnly: true,
+        },
       },
-    },
-    placeholder: "Type what you want...",
-    theme: "snow",
-  });
-  quill.setText(""); // TODO
+      placeholder: "Type what you want...",
+      theme: "snow",
+    });
+  }
+  quill.setText(content);
 
   const ydoc = new Y.Doc();
   const ytext = ydoc.getText("quill");
-  const wsProvider = new WebsocketProvider(
-    "ws://localhost:1234",
-    "test-room",
-    ydoc
-  );
+  const wsProvider = new WebsocketProvider(defaultWSURL, docId, ydoc);
   wsProvider.on("status", (event: any) => {
     console.log(event.status);
   });
@@ -114,8 +97,7 @@ const init = async (id: string | undefined) => {
   //   name: "pedro",
   //   color: "#ffb61e",
   // });
-  const binding = new QuillBinding(ytext, quill, awareness);
-  console.log(binding);
+  /*const binding = */ new QuillBinding(ytext, quill, awareness);
 };
 
 const fresh = () => {
@@ -125,13 +107,11 @@ const fresh = () => {
 const patchCallback = (message: string) => {
   console.log(message);
 };
-
 const fetchCallback = (message: string) => {};
 
 const loadFromLocal = async (docId: string) => {
   return localforage.getItem(docId);
 };
-
 const saveToLocal = async (docId: string, content: string) => {
   return localforage.setItem(docId, content);
 };
@@ -149,8 +129,6 @@ defineExpose({
 </script>
 
 <style>
-@import url(vditor/dist/index.css);
-
 .editor-container {
   width: 100%;
   height: 100%;
@@ -158,7 +136,7 @@ defineExpose({
   margin: 0;
 }
 
-#editor {
+#qeditor {
   height: calc(100vh - 100px) !important;
 }
 

@@ -5,7 +5,7 @@ import * as common from "../config";
 export const createDoc = async () => {
   const resp = await post("/document");
   const doc: { id: string; content: string } = resp.data.data;
-  // console.log("create document: ", doc);
+  console.log("create document: ", doc);
   return doc;
 };
 
