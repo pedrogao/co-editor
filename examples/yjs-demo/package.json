@@ -1,0 +1,26 @@
+{
+    "name": "quill-yjs",
+    "version": "0.0.1",
+    "license": "MIT",
+    "type": "module",
+    "scripts": {
+        "dev": "webpack serve",
+        "mul-doc": "node ./demos/mul-doc.js",
+        "update": "node ./demos/update.js"
+    },
+    "author": {
+        "name": "pedrogao"
+    },
+    "devDependencies": {
+        "webpack": "^5.75.0",
+        "webpack-cli": "^5.0.1",
+        "webpack-dev-server": "^4.11.1"
+    },
+    "dependencies": {
+        "quill": "^1.3.7",
+        "quill-cursors": "^4.0.0",
+        "y-quill": "^0.1.5",
+        "y-webrtc": "^10.2.3",
+        "yjs": "^13.5.43"
+    }
+}
