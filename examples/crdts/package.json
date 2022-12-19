@@ -1,0 +1,21 @@
+{
+  "name": "crdts",
+  "version": "1.0.0",
+  "description": "simple CRDTs implement by JS",
+  "main": "index.js",
+  "type": "module",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [
+    "CRDTs"
+  ],
+  "author": "pedrogao",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.20.5",
+    "@babel/preset-env": "^7.20.2",
+    "babel-jest": "^29.3.1",
+    "jest": "28.1.3"
+  }
+}
