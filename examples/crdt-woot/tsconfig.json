@@ -1,0 +1,21 @@
+{
+  "compilerOptions": {
+    "target": "es2017",
+    "module": "commonjs",
+    "lib": ["esnext", "dom"],
+    "outDir": "dist",
+    "declaration": true,
+    "declarationDir": "./dist",
+    "moduleResolution": "node",
+    "esModuleInterop": true,
+    "inlineSources": true,
+    "sourceMap": true,
+    "typeRoots": ["./node_modules/@types", "./src/@types"],
+    "noImplicitAny": true,
+    "resolveJsonModule": true,
+    "experimentalDecorators": true,
+    "emitDecoratorMetadata": true
+  },
+  "include": ["src/**/*"],
+  "exclude": ["node_modules", "dist"]
+}

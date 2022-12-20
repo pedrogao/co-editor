@@ -1,0 +1,48 @@
+.App {
+  text-align: center;
+  width: 800px;
+  margin: 50px auto;
+}
+
+h2 {
+  margin: 5px;
+}
+
+.external-link {
+  color: lightblue;
+  margin: 5px;
+}
+
+hr {
+  border-color: lavender;
+  border-style: solid;
+  margin-bottom: 20px;
+}
+
+.header {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.btn {
+  padding: 5px 7px;
+  border: 1px solid bisque;
+  border-radius: 5px;
+  font-size: large;
+  font-weight: 600;
+  text-transform: uppercase;
+}
+
+.online {
+  background-color: greenyellow;
+}
+
+.offline {
+  background-color: gray;
+}
+
+.editor {
+  height: 300px;
+  width: 800px;
+}

@@ -29,3 +29,8 @@
 - [WebSocket-Node](https://github.com/theturtle32/WebSocket-Node)
 - [node-js-socket-io](https://medium.com/@feritzcan/node-js-socket-io-1cde93315a7d)
 - [websockets-on-production-with-node-js](https://medium.com/voodoo-engineering/websockets-on-production-with-node-js-bdc82d07bb9f)
+
+## CRDTs Text
+
+- [Peritext A CRDT for Rich-Text Collaboration](https://www.inkandswitch.com/peritext/#peritext-a-rich-text-crdt)
+- [Collaborative Editing Using CRDTs](http://www.pierrehedkvist.com/posts/collaborative-editing-using-crdts)
