@@ -15,17 +15,22 @@
 ## examples
 
 - [quill-yjs](./examples/quill-yjs): quill editor implement by yjs & Webrtc
+- [crdts](./examples/crdts): simple CRDTs implement by js
+- [monaco-yjs](./examples/monaco-yjs): monaco editor implement by yjs & Webrtc
+- [ot-go](./examples/ot-go): OT alg implement & example by go
+- [otjs-demo](./examples/otjs-demo): ot.js examples
+- [simple-crdt](./examples/simple-crdt): simple CRDT example
+- [yjs-demo](./examples/yjs-demo): yjs examples
 
 ## projects
 
 - [backend](./projects/backend)
 - [frontend](./projects/frontend)
+- [common](./projects/common)
 
 ## references
 
-- http://objcer.com/2018/03/05/SharedPen/#more
-- https://github.com/automerge/automerge
-- https://github.com/Vanessa219/vditor
+see [references](./docs/)
 
 ## thanks
 
