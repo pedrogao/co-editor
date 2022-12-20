@@ -1,22 +1,36 @@
 const path = require("path");
+const { VueLoaderPlugin } = require("vue-loader");
+const HtmlWebpackPlugin = require("html-webpack-plugin");
+const { DefinePlugin } = require("webpack");
 
 module.exports = {
-  target: "web",
-  entry: "./client.js",
+  entry: {
+    path: "./entry.js",
+  },
+  mode: "development",
+  module: {
+    rules: [
+      {
+        test: /\.vue$/,
+        use: "vue-loader",
+      },
+      {
+        test: /\.css$/,
+        use: ["style-loader", "css-loader"],
+      },
+    ],
+  },
   output: {
-    filename: "main.js",
-    path: path.resolve(__dirname, "public"),
+    filename: "output.js",
   },
-  mode: "development", // or production
-  performance: {
-    // we dont want the wasm blob to generate warnings
-    hints: false,
-    maxEntrypointSize: 512000,
-    maxAssetSize: 512000,
-  },
-  // devServer: {
-  //   proxy: {
-  //     "/": "http://localhost:8888",
-  //   },
-  // },
+  plugins: [
+    new VueLoaderPlugin(),
+    new HtmlWebpackPlugin({
+      template: "./index.html",
+    }),
+    new DefinePlugin({
+      __VUE_PROD_DEVTOOLS__: false,
+      __VUE_OPTIONS_API__: false,
+    }),
+  ],
 };
