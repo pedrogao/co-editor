@@ -24,6 +24,7 @@ app.use(express.static(path.join(__dirname, "public")));
 
 const allActions = [];
 socket.on("connection", (socket) => {
+  console.log("connection: ", socket.id);
   const uid = serverState.uidManager.getId();
   const timestamp = serverState.timestampManager.getTimestamp();
   const actionsInfo = JSON.stringify(allActions);

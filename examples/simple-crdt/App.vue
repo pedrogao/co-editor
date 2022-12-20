@@ -1,26 +1,25 @@
 <template>
-    <div>
-        <span>Multiline message is:</span>
-        <textarea v-model="message" @input="onChange" class="input-area" placeholder="add multiple lines"></textarea>
-        <button @click="draw">绘制</button>
-        <button @click="clear">清除</button>
-    </div>
+    <span>Multiline message is:</span>
+    <textarea v-model="message" @input="onChange" class="input-area" placeholder="add multiple lines"></textarea>
+    <button @click="draw">绘制</button>
+    <button @click="clear">清除</button>
 </template>
   
 <script>
+import { defineComponent } from "vue";
 import { ClientState, socket } from './client';
 import { loadActionsInfo } from './lib/dt';
 import { draw, clear } from './tree';
 
 socket.on('connect', onConnect);
+
 function onConnect() {
     console.log('connect ' + socket.id)
 }
 
-export default {
+export default defineComponent({
     name: 'app',
     created() {
-        console.log('created');
         socket.on('server-actions', (actionsInfo) => {
             const actions = loadActionsInfo(actionsInfo)
             for (const action of actions) {
@@ -73,15 +72,15 @@ export default {
             draw(this.clientState.tree)
             this.updateMessage()
         }
-    }
-}
+    },
+})
 </script>
   
-<style>
+<style scoped>
 .input-area {
     display: block;
     width: 80%;
-    height: 400px;
+    height: 100px;
     font-size: 1rem;
     margin: auto;
     line-height: 1.5;
@@ -89,15 +88,6 @@ export default {
     background-color: #fff;
     background-clip: padding-box;
     border: 1px solid #ced4da;
-}
-
-#app {
-    font-family: 'Avenir', Helvetica, Arial, sans-serif;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    text-align: center;
-    color: #2c3e50;
-    margin-top: 60px;
 }
 
 h1,
