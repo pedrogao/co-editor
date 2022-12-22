@@ -1,0 +1,52 @@
+{
+  "sourceType": "module",
+  "tags": {
+    "allowUnknownTags": true,
+    "dictionaries": ["jsdoc"]
+  },
+  "source": {
+    "include": ["./src"],
+    "includePattern": ".js$"
+  },
+  "plugins": [
+    "plugins/markdown"
+  ],
+  "templates": {
+    "referenceTitle": "Yjs",
+    "disableSort": false,
+    "useCollapsibles": true,
+    "collapse": true,
+    "resources": {
+      "yjs.dev": "Website",
+      "docs.yjs.dev": "Docs",
+      "discuss.yjs.dev": "Forum",
+      "https://gitter.im/Yjs/community": "Chat"
+    },
+    "logo": {
+      "url": "https://yjs.dev/images/logo/yjs-512x512.png",
+      "width": "162px",
+      "height": "162px",
+      "link": "/"
+    },
+    "tabNames": {
+      "api": "API",
+      "tutorials": "Examples"
+    },
+    "footerText": "Shared Editing",
+    "css": [
+      "./style.css"
+    ],
+    "default": {
+      "staticFiles": {
+          "include": []
+      }
+    }
+  },
+  "opts": {
+    "destination": "./docs/",
+    "encoding": "utf8",
+    "private": false,
+    "recurse": true,
+    "template": "./node_modules/tui-jsdoc-template"
+  }
+}
