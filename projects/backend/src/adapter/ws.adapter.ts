@@ -10,18 +10,18 @@ export class WsAdapter implements WebSocketAdapter {
   constructor(private app: INestApplicationContext) {}
 
   create(port: number, options: any = {}): any {
-    logger.info(`ws create from port: ${port}`);
+    logger.log(`ws create from port: ${port}`);
     return new WebSocket.Server({ port, ...options });
   }
 
   bindClientConnect(server: WebSocket, callback: () => void) {
-    logger.info('ws bind client connect');
+    logger.log('ws bind client connect');
     server.on('connection', callback);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   bindClientDisconnect(client: WebSocket, callback: () => void) {
-    logger.info('client disconnect');
+    logger.log('client disconnect');
   }
 
   bindMessageHandlers(
@@ -29,7 +29,7 @@ export class WsAdapter implements WebSocketAdapter {
     handlers: MessageMappingProperties[],
     process: (data: any) => Observable<any>,
   ) {
-    logger.info('new connection from client');
+    logger.log('new connection from client');
 
     fromEvent(client, 'message')
       .pipe(
@@ -62,12 +62,12 @@ export class WsAdapter implements WebSocketAdapter {
       logger.error('message miss match: ', message);
       return EMPTY;
     }
-    logger.info('handle message: ', message);
+    logger.log('handle message: ', message);
     return process(messageHandler.callback(message.data));
   }
 
   close(server: WebSocket) {
-    logger.info('ws server close');
+    logger.log('ws server close');
     server.close();
   }
 }

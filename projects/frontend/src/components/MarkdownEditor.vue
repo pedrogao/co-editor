@@ -75,8 +75,6 @@ const init = async (id: string | undefined) => {
         cursors: true,
         toolbar: toolbarOptions,
         history: {
-          // Local undo shouldn't undo changes
-          // from remote users
           userOnly: true,
         },
       },
@@ -93,21 +91,12 @@ const init = async (id: string | undefined) => {
     console.log(event.status);
   });
   const awareness = wsProvider.awareness;
-  // awareness.setLocalStateField("user", {
-  //   name: "pedro",
-  //   color: "#ffb61e",
-  // });
   /*const binding = */ new QuillBinding(ytext, quill, awareness);
 };
 
 const fresh = () => {
   init(props.id);
 };
-
-const patchCallback = (message: string) => {
-  console.log(message);
-};
-const fetchCallback = (message: string) => {};
 
 const loadFromLocal = async (docId: string) => {
   return localforage.getItem(docId);

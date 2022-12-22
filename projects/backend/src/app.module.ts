@@ -4,7 +4,6 @@ import { AppService } from './app.service';
 import { DocumentController } from './document/document.controller';
 import { DocumentService } from './document/document.service';
 import { LoggerMiddleware } from './middleware/logger.middleware';
-// import { WsDocumentGateway } from './gateway/ws.gateway';
 import { YjsGateway } from './gateway/yjs.gateway';
 
 @Module({

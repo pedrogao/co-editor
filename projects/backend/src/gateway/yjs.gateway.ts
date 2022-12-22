@@ -5,6 +5,7 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
 } from '@nestjs/websockets';
+import { logger } from '../logger';
 import { Server } from 'ws';
 import { setupWSConnection } from 'y-websocket/bin/utils';
 
@@ -21,12 +22,12 @@ export class YjsGateway implements OnGatewayConnection, OnGatewayDisconnect {
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleConnection(client: any): void {
-    // console.log('new connection: ', client);
+    logger.log('new connection');
     this.server.on('connection', setupWSConnection);
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   handleDisconnect(client: any): void {
-    console.log('disconnection');
+    logger.log('disconnection');
   }
 }
