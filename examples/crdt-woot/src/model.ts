@@ -1,5 +1,5 @@
 import { Char, CharId, Operation } from './types';
-import { v4 as uuidv4 } from 'uuid';
+import { generateId } from './id';
 import _ from 'lodash';
 
 export function comesBefore(char1: CharId, char2: CharId): boolean {
@@ -18,7 +18,7 @@ export function prepareInsert(
 ): Char {
   const { nextId, prevId } = position(index, sequence);
   return {
-    id: uuidv4(),
+    id: generateId(),
     charId: {
       siteId,
       clock,
@@ -75,7 +75,7 @@ export function integrateIns(
     });
     L.push(next);
 
-    let i = 1;
+    let i = 1; // 找到需要插入的位置
     while (i < L.length - 1 && comesBefore(L[i].charId, incomingChar.charId)) {
       i = i + 1;
     }

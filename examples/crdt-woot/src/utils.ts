@@ -1,10 +1,9 @@
 import { Char } from './types';
-import { v4 as uuidv4 } from 'uuid';
-import { shuffle } from 'lodash';
+import { generateId } from './id';
 
 export const generateSite = (siteId: string = '1') => {
-  const startId = uuidv4();
-  const endId = uuidv4();
+  const startId = generateId();
+  const endId = generateId();
   const start: Char = {
     id: startId,
     charId: {
@@ -37,7 +36,7 @@ export const generateChar = (
   prevId: string,
   nextId: string
 ): Char => ({
-  id: uuidv4(),
+  id: generateId(),
   charId: {
     siteId,
     clock,

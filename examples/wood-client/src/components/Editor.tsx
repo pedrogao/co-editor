@@ -1,14 +1,14 @@
-import { useState, useRef, useEffect } from 'react';
-import ReactQuill, { Quill } from 'react-quill';
-import CRDT, { types } from 'crdt-woot';
-import 'react-quill/dist/quill.snow.css';
-import QuillCursors from 'quill-cursors';
-import { Site } from '../App';
-import { VisualizedSequence } from './VisualizedSequence';
-import IQuillRange from 'quill-cursors/dist/quill-cursors/i-range';
-import { Sources } from 'quill';
+import { useState, useRef, useEffect } from "react";
+import ReactQuill, { Quill } from "react-quill";
+import CRDT, { types } from "crdt-woot";
+import "react-quill/dist/quill.snow.css";
+import QuillCursors from "quill-cursors";
+import { Site } from "../App";
+import { VisualizedSequence } from "./VisualizedSequence";
+import IQuillRange from "quill-cursors/dist/quill-cursors/i-range";
+import { Sources } from "quill";
 
-Quill.register('modules/cursors', QuillCursors);
+Quill.register("modules/cursors", QuillCursors);
 
 const modules = {
   cursors: {
@@ -56,7 +56,7 @@ function Editor({
       if (qC) {
         cursorModule.moveCursor(qC.id, { index: index, length });
       } else {
-        cursorModule.createCursor(siteId, siteId, '#0000FF');
+        cursorModule.createCursor(siteId, siteId, "#0000FF");
         cursorModule.moveCursor(siteId, { index: index, length });
       }
     }
@@ -70,7 +70,7 @@ function Editor({
       oldRange: IQuillRange,
       source: Sources
     ) {
-      if (source === 'user' && range) {
+      if (source === "user" && range) {
         // If the user has manually updated their selection, send this change
         // immediately, because a user update is important, and should be
         // sent as soon as possible for a smooth experience.
@@ -84,10 +84,10 @@ function Editor({
     if (ref !== null && editor === null) {
       const cursorModule = ref.current
         ?.getEditor()
-        .getModule('cursors') as QuillCursors;
+        .getModule("cursors") as QuillCursors;
 
       const insert = (index: number, value: string, siteId: string) => {
-        ref.current?.getEditor().insertText(index, value, 'silent');
+        ref.current?.getEditor().insertText(index, value, "silent");
         updateCursors(cursorModule, index + 1, 0, siteId);
       };
       const del = (index: number, siteId: string) => {
@@ -117,46 +117,52 @@ function Editor({
     if (ref) {
       ref.current
         ?.getEditor()
-        .on('selection-change', selectionChangeHandler(updateRange));
+        .on("selection-change", selectionChangeHandler(updateRange));
     }
   }, [updateRange]);
 
   const inspectDelta = (ops: any, index: number, source: string) => {
-    if (ops['insert']) {
-      const chars = ops['insert'];
-      const attributes = ops['attributes'];
+    if (ops["insert"]) {
+      const chars = ops["insert"];
+      const attributes = ops["attributes"];
       const p = editor && editor.generateIns(index, chars);
       if (p) {
         updateListeners(p, siteId);
       }
-    } else if (ops['delete']) {
-      const len = ops['delete'];
+    } else if (ops["delete"]) {
+      const len = ops["delete"];
       let itemsRemaining = len;
 
       while (itemsRemaining > 0) {
         const p = editor && editor.generateDel(index + itemsRemaining - 1);
-        printEditor && console.log('GENERATE DEL FROM: ', siteId, p);
+        printEditor && console.log("GENERATE DEL FROM: ", siteId, p);
         if (p) {
           updateListeners(p, siteId);
         }
         itemsRemaining = itemsRemaining - 1;
       }
-    } else if (ops['retain']) {
-      const len = ops['retain'];
-      const attributes = ops['attributes'];
-      // console.log(index, len, attributes, source);
+    } else if (ops["retain"]) {
+      const len = ops["retain"];
+      const attributes = ops["attributes"];
+      console.log(index, len, attributes, source);
       // this.retain(index, len, attributes, source);
     }
   };
 
   const onChange = (value: string, delta: any, source: any) => {
-    let index = delta.ops[0]['retain'] || 0;
+    console.log(
+      "change, value: %s, delta: %O, source: %s ",
+      value,
+      delta,
+      source
+    );
+    let index = delta.ops[0]["retain"] || 0;
     printEditor && console.log(siteId, value, delta, source);
-    if (source === 'user') {
+    if (source === "user") {
       if (delta.ops.length === 4) {
         const deleteOps_1 = delta.ops[1];
         inspectDelta(deleteOps_1, index, source);
-        index += delta.ops[2]['retain'];
+        index += delta.ops[2]["retain"];
         const deleteOps_2 = delta.ops[3];
         inspectDelta(deleteOps_2, index, source);
       } else if (delta.ops.length === 3) {

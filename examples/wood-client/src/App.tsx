@@ -52,9 +52,11 @@ function App() {
     otherSite.onSelect &&
       otherSite.onSelect(fromIndex, toIndex - fromIndex, fromSite.siteId);
   };
+
   return (
     <div className="App">
       <Links />
+      
       <div className="header">
         <h2>{siteA.siteId}</h2>
         <button

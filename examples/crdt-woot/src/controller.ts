@@ -1,5 +1,5 @@
 import { Site, Char, Payload, Operation } from './types';
-import { v4 as uuidv4 } from 'uuid';
+import { generateId } from './id';
 import * as model from './model';
 
 export default class Controller {
@@ -95,7 +95,7 @@ export default class Controller {
     return {
       operation: Operation.Delete,
       char,
-      id: uuidv4(),
+      id: generateId(),
     };
   }
 
@@ -117,7 +117,7 @@ export default class Controller {
     const payload = {
       char: { ...newChar },
       operation: Operation.Insert,
-      id: uuidv4(),
+      id: generateId(),
     };
 
     const newSequence = model.insert(newChar, sequence);
