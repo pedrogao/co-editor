@@ -41,3 +41,4 @@
 - [Building a React code editor and syntax highlighter from scratch](https://blog.logrocket.com/building-react-code-editor-syntax-highlighter/)
 - [What is WYSIWYG? | What You See is What You Get](https://www.zesty.io/mindshare/marketing-technology/what-is-wysiwyg-what-you-see-is-what-you-get/)
 - [TextEditor](https://github.com/priyansh74/TextEditor)
+- [Program your own WYSIWYG editor – with HTML, CSS & JavaScript](https://webdeasy.de/en/program-wysiwyg-editor/)
