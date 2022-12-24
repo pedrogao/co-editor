@@ -12,6 +12,7 @@
 - [浅谈在线文档的那些事儿](https://www.cnblogs.com/cangqinglang/p/16016117.html)
 - [OT 算法](https://zhuanlan.zhihu.com/p/425284127)
 - [OT FAQ](https://www3.ntu.edu.sg/scse/staff/czsun/projects/otfaq/)
+- [从零开始设计一个 Web 端多人协同编辑器](https://zhuanlan.zhihu.com/p/131572523)
 
 ## CRDTs
 
@@ -34,3 +35,9 @@
 
 - [Peritext A CRDT for Rich-Text Collaboration](https://www.inkandswitch.com/peritext/#peritext-a-rich-text-crdt)
 - [Collaborative Editing Using CRDTs](http://www.pierrehedkvist.com/posts/collaborative-editing-using-crdts)
+
+## editors
+
+- [Building a React code editor and syntax highlighter from scratch](https://blog.logrocket.com/building-react-code-editor-syntax-highlighter/)
+- [What is WYSIWYG? | What You See is What You Get](https://www.zesty.io/mindshare/marketing-technology/what-is-wysiwyg-what-you-see-is-what-you-get/)
+- [TextEditor](https://github.com/priyansh74/TextEditor)
