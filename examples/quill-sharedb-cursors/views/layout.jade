@@ -1,0 +1,13 @@
+doctype html
+html
+  head
+    title= title
+    link(rel='stylesheet', href='//maxcdn.bootstrapcdn.com/font-awesome/4.7.0/css/font-awesome.min.css')
+    link(rel='stylesheet', href='/stylesheets/style.css')
+    link(rel='stylesheet', href='/quill.snow.css')
+    link(rel='stylesheet', href='/quill-cursors.css')
+  body
+    block content
+    script(src='//cdnjs.cloudflare.com/ajax/libs/chance/1.0.6/chance.min.js')
+    script(src='/dist/bundle.js')
+    block scripts
