@@ -3,11 +3,13 @@
     <div id="qeditor"></div>
     <div class="status">
       <div class="status-left">
-        <span>字数：
+        <span class="status-sub"
+          >字数：
           <strong ref="textCounter">0</strong>
         </span>
-        <span>行数：
-          <strong>3</strong>
+        <span class="status-sub"
+          >行数：
+          <strong ref="lineCounter">0</strong>
         </span>
       </div>
       <div class="status-right">
@@ -39,6 +41,7 @@ const props = defineProps<{
 }>();
 
 const textCounter = ref<typeof HTMLElement | null>(null);
+const lineCounter = ref<typeof HTMLElement | null>(null);
 
 Quill.register("modules/cursors", QuillCursors);
 Quill.register("modules/counter", Counter);
@@ -70,17 +73,16 @@ const init = async (id: string | undefined) => {
   if (!quill) {
     quill = new Quill(document.getElementById("qeditor")!, {
       modules: {
-        cursors: {
-          hideDelayMs: 5000,
-          hideSpeedMs: 0,
-        },
+        cursors: {},
         toolbar: toolbarOptions,
         history: {
           userOnly: true,
         },
         counter: {
-          ele: textCounter.value!,
-          unit: "word",
+          wordElement: textCounter.value!,
+          wordUnit: "字",
+          lineElement: lineCounter.value!,
+          lineUnit: "行",
         },
       },
       placeholder: "Type what you want...",
@@ -157,7 +159,7 @@ defineExpose({
   padding-right: 10px;
 }
 
-span {
+.status-sub {
   padding-left: 16px;
 }
 

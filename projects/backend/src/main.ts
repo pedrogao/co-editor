@@ -12,4 +12,6 @@ async function bootstrap() {
   await app.listen(3000);
 }
 
+process.on('warning', (e) => console.warn(e.stack));
+
 bootstrap();
