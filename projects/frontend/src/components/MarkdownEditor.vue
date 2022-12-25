@@ -3,12 +3,10 @@
     <div id="qeditor"></div>
     <div class="status">
       <div class="status-left">
-        <span
-          >字数：
-          <strong>2</strong>
+        <span>字数：
+          <strong ref="textCounter">0</strong>
         </span>
-        <span
-          >行数：
+        <span>行数：
           <strong>3</strong>
         </span>
       </div>
@@ -20,7 +18,7 @@
 </template>
 
 <script lang="ts" setup>
-import { onMounted } from "vue";
+import { onMounted, ref } from "vue";
 import * as localforage from "localforage";
 import Quill from "quill";
 import QuillCursors from "quill-cursors";
@@ -30,6 +28,7 @@ import * as Y from "yjs";
 
 import { createDoc, queryDoc } from "../api/document";
 import { defaultWSURL } from "../config";
+import { Counter } from "../modules/quill/counter";
 
 export interface Document {
   content: string;
@@ -39,7 +38,10 @@ const props = defineProps<{
   id?: string;
 }>();
 
+const textCounter = ref<typeof HTMLElement | null>(null);
+
 Quill.register("modules/cursors", QuillCursors);
+Quill.register("modules/counter", Counter);
 
 onMounted(async () => {
   await init(props.id);
@@ -49,14 +51,10 @@ let quill: Quill | null = null;
 
 const toolbarOptions = [
   ["bold", "italic", "underline", "strike"],
-  ["blockquote", "code-block"],
-  [{ header: 1 }, { header: 2 }],
-  [{ list: "ordered" }, { list: "bullet" }],
-  [{ script: "sub" }, { script: "super" }],
-  [{ indent: "-1" }, { indent: "+1" }],
-  [{ direction: "rtl" }],
-  [{ size: ["small", "large", "huge"] }],
-  [{ header: [1, 2, 3, 4, 5, 6, false] }],
+  [{ header: 1 }, { header: 2 }, { header: 3 }, { header: 4 }],
+  [{ list: "ordered" }, { list: "bullet" }, { indent: "+1" }, { indent: "-1" }],
+  ["align", "color", "background"],
+  ["blockquote", "code-block", "link", "image"],
   ["clean"],
 ];
 
@@ -72,10 +70,17 @@ const init = async (id: string | undefined) => {
   if (!quill) {
     quill = new Quill(document.getElementById("qeditor")!, {
       modules: {
-        cursors: true,
+        cursors: {
+          hideDelayMs: 5000,
+          hideSpeedMs: 0,
+        },
         toolbar: toolbarOptions,
         history: {
           userOnly: true,
+        },
+        counter: {
+          ele: textCounter.value!,
+          unit: "word",
         },
       },
       placeholder: "Type what you want...",
@@ -83,10 +88,10 @@ const init = async (id: string | undefined) => {
     });
   }
   quill.setText(content);
-
+  console.log("docId: ", docId);
   const ydoc = new Y.Doc();
   const ytext = ydoc.getText("quill");
-  const wsProvider = new WebsocketProvider(defaultWSURL, docId, ydoc);
+  const wsProvider = new WebsocketProvider(defaultWSURL, "test-doc", ydoc);
   wsProvider.on("status", (event: any) => {
     console.log(event.status);
   });
@@ -119,7 +124,7 @@ defineExpose({
 
 <style>
 .editor-container {
-  width: 100%;
+  width: 80%;
   height: 100%;
   padding: 0;
   margin: 0;
@@ -154,5 +159,53 @@ defineExpose({
 
 span {
   padding-left: 16px;
+}
+
+button.ql-header svg {
+  display: none;
+}
+
+.ql-header[value="4"]:after {
+  clear: both;
+  content: "H4";
+  display: table;
+  font-weight: 600;
+  margin-top: -2px;
+  margin-left: 1px;
+  font-size: 14px;
+}
+
+.ql-header[value="3"]:after {
+  clear: both;
+  content: "H3";
+  display: table;
+  font-weight: 600;
+  margin-top: -2px;
+  margin-left: 1px;
+  font-size: 14px;
+}
+
+.ql-header[value="2"]:after {
+  clear: both;
+  content: "H2";
+  display: table;
+  font-weight: 600;
+  margin-top: -2px;
+  margin-left: 1px;
+  font-size: 14px;
+}
+
+.ql-header[value="1"]:after {
+  clear: both;
+  content: "H1";
+  display: table;
+  font-weight: 600;
+  margin-top: -2px;
+  margin-left: 1px;
+  font-size: 14px;
+}
+
+button.ql-header.ql-active {
+  color: #3891d0;
 }
 </style>

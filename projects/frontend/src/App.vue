@@ -4,11 +4,6 @@
       <input class="title" placeholder="请填写标题" v-model="inputId" />
       <div class="right-box">
         <button @click="openFile" class="menu">文件</button>
-        <div class="more">↓</div>
-        <ul class="more-list">
-          <li class="item">写文章</li>
-          <li class="item">查看</li>
-        </ul>
       </div>
     </header>
     <div class="editor">
